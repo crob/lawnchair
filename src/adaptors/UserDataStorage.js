@@ -4,21 +4,24 @@
  * UserData implementation for Lawnchair for older IE browsers.
  *
  */
-var UserDataAdaptor = function(options) {
+var UserDataAdaptor = function(options, callback) {
     for (var i in LawnchairAdaptorHelpers) {
         this[i] = LawnchairAdaptorHelpers[i];
     }
-    this.init(options);
+    this.init(options, callback);
 };
 
 UserDataAdaptor.prototype = {
-	init:function(){
+	init:function(options, callback){
 		var s = document.createElement('span');
 		s.style.behavior = 'url(\'#default#userData\')';
 		s.style.position = 'absolute';
 		s.style.left = 10000;
 		document.body.appendChild(s);
 		this.storage = s.load('lawnchair');
+		if(callback) {
+			callback();
+		}
 	},
 	get:function(key, callback){
 		// this.storage.getAttribute(key);

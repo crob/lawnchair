@@ -4,13 +4,13 @@
  * A lightweight JSON document store.
  *
  */
-var Lawnchair = function(opts) {
-	this.init(opts);
+var Lawnchair = function(opts, callback) {
+	this.init(opts, callback);
 }
 
 Lawnchair.prototype = {
 	
-	init:function(opts) {
+	init:function(opts, callback) {
 		var adaptors = {
 			'webkit':window.WebkitSQLiteAdaptor,
 			'gears':window.GearsSQLiteAdaptor,
@@ -21,7 +21,7 @@ Lawnchair.prototype = {
 			'air-async':window.AIRSQLiteAsyncAdaptor
 		};
 	
-		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts) : new WebkitSQLiteAdaptor(opts);
+		this.adaptor = opts.adaptor ? new adaptors[opts.adaptor](opts, callback) : new WebkitSQLiteAdaptor(opts, callback);
 	},
 	
 	// Save an object to the store. If a key is present then update. Otherwise create a new record.

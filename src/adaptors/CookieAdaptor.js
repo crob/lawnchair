@@ -6,15 +6,15 @@
  * Based on ppk's http://www.quirksmode.org/js/cookies.html
  *
  */
-var CookieAdaptor = function(options) {
+var CookieAdaptor = function(options, callback) {
 	for (var i in LawnchairAdaptorHelpers) {
 		this[i] = LawnchairAdaptorHelpers[i];
 	}
-	this.init(options);
+	this.init(options, callback);
 };
 
 CookieAdaptor.prototype = {
-	init:function(){
+	init:function(options, callback){
 		this.createCookie = function(name, value, days) {
 			if (days) {
 				var date = new Date();
@@ -24,6 +24,9 @@ CookieAdaptor.prototype = {
 			else var expires = "";
 			document.cookie = name+"="+value+expires+"; path=/";
 		};
+		if(callback) {
+			callback();
+		}
 	},
 	get:function(key, callback){
 		var readCookie = function(name) {

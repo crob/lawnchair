@@ -60,16 +60,16 @@ if (window.runtime)
  *
  * This uses asynchronous connections to the DB.
  */
-var AIRSQLiteAsyncAdaptor = function(options) {
+var AIRSQLiteAsyncAdaptor = function(options, callback) {
 	for (var i in LawnchairAdaptorHelpers) {
 		this[i] = LawnchairAdaptorHelpers[i];
 	}
-	this.init(options);
+	this.init(options, callback);
 };
 
 
 AIRSQLiteAsyncAdaptor.prototype = {
-	init:function(options) {
+	init:function(options, callback) {
 	
 		var that = this;
 		var merge = that.merge;
@@ -90,6 +90,10 @@ AIRSQLiteAsyncAdaptor.prototype = {
 		}
 
 		this._execSql('create table if not exists ' + this.table + ' (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)');
+		
+		if(callback) {
+			callback();
+		}
 	},
 	
 	/*

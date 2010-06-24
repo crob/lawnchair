@@ -152,16 +152,20 @@ context('Lawnchair', function(){
 
 context('Lawnchair with multiple collections', function(){
 	
-	var dba = new Lawnchair({table: 'a'});
-	var dbb = new Lawnchair({table: 'b'});
-
+	var dbb;
+	var dba = new Lawnchair({table: 'a'}, function() {
+		dbb = new Lawnchair({table: 'b'});
+	});
+	
 	should( 'be empty.', function(){
 		stop();
-		dba.nuke();
-		dbb.nuke();
-		dba.all(function(rs){
-			equals(rs.length, 0);
-			dbb.all('equals(r.length, 0); start();');
+		dba.nuke(function() {
+			dbb.nuke(function() {
+				dba.all(function(rs){
+					equals(rs.length, 0);
+					dbb.all('equals(r.length, 0); start();');
+				});
+			});
 		});
 	});
 

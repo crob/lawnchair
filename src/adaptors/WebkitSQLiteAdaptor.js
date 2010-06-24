@@ -4,16 +4,16 @@
  * Sqlite implementation for Lawnchair.
  *
  */
-var WebkitSQLiteAdaptor = function(options) {
+var WebkitSQLiteAdaptor = function(options, callback) {
 	for (var i in LawnchairAdaptorHelpers) {
 		this[i] = LawnchairAdaptorHelpers[i];
 	}
-	this.init(options);
+	this.init(options, callback);
 };
 
 
 WebkitSQLiteAdaptor.prototype = {
-	init:function(options) {
+	init:function(options, callback) {
 		var that = this;
 		var merge = that.merge;
 		var opts = (typeof arguments[0] == 'string') ? {table:options} : options;
@@ -27,13 +27,20 @@ WebkitSQLiteAdaptor.prototype = {
 		this.db			= merge(null,        opts.db		);
 
 		// default sqlite callbacks
-		this.onError = function(){};
+		this.onError = function(error){
+			alert("shitski's: " +error.message)
+		};
 		this.onData  = function(){};
 
 		if("onError" in opts) {
 			this.onError = opts.onError;
 		}
-
+		
+		var callbackToUse = function() {};
+		if(callback) {
+			callbackToUse = that.getTimeoutCallback(callback);
+		}
+		
 		// error out on shit browsers
 		if (!window.openDatabase)
 			throw('Lawnchair, "This browser does not support sqlite storage."');
@@ -43,9 +50,9 @@ WebkitSQLiteAdaptor.prototype = {
 
 		// create a default database and table if one does not exist
 		this.db.transaction(function(tx) {
-			tx.executeSql("SELECT COUNT(*) FROM " + that.table, [], function(){}, function(tx, error) {
+			tx.executeSql("SELECT COUNT(*) FROM " + that.table, [], callbackToUse, function(tx, error) {
 				that.db.transaction(function(tx) {
-					tx.executeSql("CREATE TABLE "+ that.table + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)", [], function(){}, that.onError);
+					tx.executeSql("CREATE TABLE "+ that.table + " (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)", [], callbackToUse, that.onError);
 				});
 			});
 		});

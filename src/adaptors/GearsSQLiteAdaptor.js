@@ -94,16 +94,16 @@
  * Gears flavored SQLite implementation for Lawnchair.
  *
  */
-var GearsSQLiteAdaptor = function(options) {
+var GearsSQLiteAdaptor = function(options, callback) {
 	for (var i in LawnchairAdaptorHelpers) {
 		this[i] = LawnchairAdaptorHelpers[i];
 	}
-	this.init(options);
+	this.init(options, callback);
 };
 
 
 GearsSQLiteAdaptor.prototype = {
-	init:function(options) {
+	init:function(options, callback) {
 	
 		var that = this;
 		var merge = that.merge;
@@ -115,6 +115,10 @@ GearsSQLiteAdaptor.prototype = {
 		this.db = google.gears.factory.create('beta.database');
 		this.db.open(this.name);
 		this.db.execute('create table if not exists ' + this.table + ' (id NVARCHAR(32) UNIQUE PRIMARY KEY, value TEXT, timestamp REAL)');
+		
+		if(callback) {
+			callback();
+		}
 	},
 	save:function(obj, callback) {
 		var that = this;

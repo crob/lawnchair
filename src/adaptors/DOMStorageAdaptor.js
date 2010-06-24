@@ -7,16 +7,16 @@
  * - window.name code courtesy Remy Sharp: http://24ways.org/2009/breaking-out-the-edges-of-the-browser
  *
  */
-var DOMStorageAdaptor = function(options) {
+var DOMStorageAdaptor = function(options, callback) {
 	for (var i in LawnchairAdaptorHelpers) {
 		this[i] = LawnchairAdaptorHelpers[i];
 	}
-	this.init(options);
+	this.init(options, callback);
 };
 
 
 DOMStorageAdaptor.prototype = {
-	init:function(options) {
+	init:function(options, callback) {
 		var self = this;
 		this.storage = this.merge(window.localStorage, options.storage);
 		this.table = this.merge('field', options.table);
@@ -44,6 +44,9 @@ DOMStorageAdaptor.prototype = {
 				};
 			})();
 		};
+		if(callback) {
+			callback();
+		}
 	},
 
 	save:function(obj, callback) {

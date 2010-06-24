@@ -5,6 +5,14 @@
  *
  */
 var LawnchairAdaptorHelpers = {
+	
+	//this wraps our callback with a timeout, slightly hacky but can cause lock exceptions without it
+	getTimeoutCallback: function(callback) {
+		return function() {
+			setTimeout(callback, 50);	
+		};
+	},
+	
 	// merging default properties with user defined args
 	merge: function(defaultOption, userOption) {
 		return (userOption == undefined || userOption == null) ? defaultOption: userOption;
