@@ -9,7 +9,9 @@ var LawnchairAdaptorHelpers = {
 	//this wraps our callback with a timeout, slightly hacky but can cause lock exceptions without it
 	getTimeoutCallback: function(callback) {
 		return function() {
-			setTimeout(callback, 50);	
+			setTimeout(function() {
+				callback();
+			}, 10);	
 		};
 	},
 	
